@@ -65,13 +65,13 @@ settings = setting.get_settings_data()
 class checkserver(object):
 	def start(self):
 		self.players=[]
-		
+
 		self.t1=ba.timer(1,  ba.Call(self.check),repeat=True)
 
 	def check(self):
 		newPlayers=[]
 		for ros in _ba.get_game_roster():
-			
+
 			newPlayers.append(ros['account_id'])
 			if ros['account_id'] not in self.players and ros['client_id'] !=-1:
 				d_str=ros['display_string']
@@ -81,15 +81,15 @@ class checkserver(object):
 					_ba.screenmessage("Profanity in Id , change your ID and join back",color=(1,0,0),transient=True,clients=[ros['client_id']])
 					Logger.log(d_str+"||"+ros["account_id"]+"|| kicked by profanity check","sys")
 					_ba.disconnect_client(ros['client_id'],1)
-					
+
 					return
 				if settings["whitelist"] and ros["account_id"]!=None:
 					if ros["account_id"] not in pdata.whitelist:
 						_ba.screenmessage("Not in whitelist,contact admin",color=(1,0,0),transient=True,clients=[ros['client_id']])
 						Logger.log(d_str+"||"+ros["account_id"]+" | kicked > not in whitelist")
 						_ba.disconnect_client(ros['client_id'])
-					
-							
+
+
 						return
 
 				if ros['account_id'] != None:
@@ -97,7 +97,7 @@ class checkserver(object):
 						on_player_join_server(ros['account_id'],serverdata.clients[ros['account_id']])
 					else:
 						LoadProfile(ros['account_id']).start()
-		
+
 		self.players=newPlayers
 
 
@@ -120,9 +120,9 @@ def on_player_join_server(pbid,player_data):
 				_ba.screenmessage("Joining too fast , slow down dude",color=(1,0,1),transient=True,clients=[clid])
 				Logger.log(pbid+"|| kicked for joining too fast")
 				_ba.disconnect_client(clid)
-				
+
 				_thread.start_new_thread(reportSpam,(pbid,))
-				
+
 				return
 		else:
 			rejoinCount=0
@@ -135,17 +135,17 @@ def on_player_join_server(pbid,player_data):
 
 
 
-	
+
 	if player_data!=None:
 		device_strin=""
-		if player_data["isBan"] or get_account_age(player_data["accountAge"]) < settings["minAgeToJoinInHours"]:
+		if (player_data["isBan"] or get_account_age(player_data["accountAge"]) < settings["minAgeToJoinInHours"]) and False:
 			for ros in _ba.get_game_roster():
 				if ros['account_id']==pbid:
 					if not player_data["isBan"]:
 						_ba.screenmessage("New Accounts not allowed here , come back later",color=(1,0,0), transient=True,clients=[ros['client_id']])
 					Logger.log(pbid+" | kicked > reason:Banned account")
 					_ba.disconnect_client(ros['client_id'])
-					
+
 			return
 		else:
 			if pbid not in serverdata.clients:
@@ -166,9 +166,9 @@ def on_player_join_server(pbid,player_data):
 					cid=ros['client_id']
 					d_st=ros['display_string']
 			_ba.screenmessage(settings["regularWelcomeMsg"]+" "+d_st,color=(0.60,0.8,0.6),transient=True,clients=[cid])
-		
+
 	else:
-		
+
 		d_string=""
 		cid=113
 		for ros in _ba.get_game_roster():
@@ -186,7 +186,7 @@ def on_player_join_server(pbid,player_data):
 		thread.start()
 		_ba.screenmessage(settings["firstTimeJoinMsg"],color=(0.6,0.8,0.6),transient=True,clients=[cid])
 
-		
+
 
 		#pdata.add_profile(pbid,d_string,d_string)
 
@@ -222,7 +222,7 @@ def _make_request_safe(request, retries=2, raise_err=True):
             raise
 
 def get_account_creation_date(pb_id):
-	# thanks rikko 
+	# thanks rikko
     account_creation_url = "http://bombsquadgame.com/accountquery?id=" + pb_id
     account_creation = _make_request_safe(lambda: urllib.request.urlopen(account_creation_url))
     if account_creation is not None:
@@ -262,7 +262,7 @@ class LoadProfile(threading.Thread):
 	def __init__(self,pb_id):
 		threading.Thread.__init__(self)
 		self.pbid=pb_id
-		
+
 
 	def run(self):
 		player_data=pdata.get_info(self.pbid)
@@ -277,27 +277,27 @@ class LoadProfile(threading.Thread):
 # ================ http ================
 class FetchThread(threading.Thread):
     def __init__(self,target, callback=None,pb_id="ji",display_string="XXX"):
-        
+
         super(FetchThread, self).__init__(target=self.target_with_callback, args=(pb_id,display_string,))
         self.callback = callback
         self.method = target
-        
-        
+
+
     def target_with_callback(self,pb_id,display_string):
-        
+
         data=self.method(pb_id)
         if self.callback is not None:
             self.callback(data,pb_id,display_string)
 
 
 def my_acc_age(pb_id):
-    
+
     return get_account_creation_date(pb_id)
 
 
 def save_age(age, pb_id,display_string):
-    
-    
+
+
     pdata.add_profile(pb_id,display_string,display_string,age)
     time.sleep(2)
     thread2 = FetchThread(
@@ -307,14 +307,14 @@ def save_age(age, pb_id,display_string):
 		    display_string=display_string
 		)
     thread2.start()
-    if get_account_age(age) < settings["minAgeToJoinInHours"]:
+    if (get_account_age(age) < settings["minAgeToJoinInHours"]) and False:
     	msg="New Accounts not allowed to play here , come back tmrw."
     	Logger.log(pb_id+"|| kicked > new account")
     	_ba.pushcall(Call(kick_by_pb_id,pb_id,msg),from_other_thread=True)
 
 def save_ids(ids,pb_id,display_string):
 
-	
+
 	pdata.update_displayString(pb_id,ids)
 
 
@@ -325,7 +325,7 @@ def save_ids(ids,pb_id,display_string):
 		Logger.log(pb_id+"|| kicked , for using spoofed id "+display_string)
 	else:
 		serverdata.clients[pb_id]["verified"]=True
-	
+
 
 
 def kick_by_pb_id(pb_id,msg):
@@ -334,7 +334,7 @@ def kick_by_pb_id(pb_id,msg):
 			_ba.screenmessage(msg, transient=True, clients=[ros['client_id']])
 			_ba.disconnect_client(ros['client_id'])
 
-	
+
 
 def get_account_age(ct):
     creation_time=datetime.datetime.strptime(ct,"%Y-%m-%d %H:%M:%S")
@@ -349,7 +349,7 @@ def reportSpam(id):
 	profiles=pdata.get_profiles()
 	if id in profiles:
 		count=profiles[id]["spamCount"]
-		
+
 		if now-profiles[id]["lastSpam"] < 2*24*60*60:
 			count+=1
 			if count > 3:

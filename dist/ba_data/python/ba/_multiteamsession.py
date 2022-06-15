@@ -143,7 +143,8 @@ class MultiTeamSession(Session):
     def get_max_players(self) -> int:
         """Return max number of ba.Players allowed to join the game at once."""
         if self.use_teams:
-            return _ba.app.config.get('Team Game Max Players', 8)
+            return 32
+            # return _ba.app.config.get('Team Game Max Players', 8)
         return _ba.app.config.get('Free-for-All Max Players', 8)
 
     def _instantiate_next_game(self) -> None:

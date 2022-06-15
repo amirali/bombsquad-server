@@ -24,12 +24,12 @@ def filter_chat_message(msg, client_id):
 
 	if msg.startswith("/"):
 		return Main.Command(msg, client_id)
-	
-	
+
+
 	Logger.log(acid+" | "+msg,"chat")
 
 	if acid in serverdata.clients and serverdata.clients[acid]["verified"]:
-		
+
 		if serverdata.muted:
 			_ba.screenmessage("Server on mute", transient=True, clients=[client_id])
 			return
@@ -37,7 +37,7 @@ def filter_chat_message(msg, client_id):
 		elif serverdata.clients[acid]["isMuted"]:
 			_ba.screenmessage("You are on mute", transient=True, clients=[client_id])
 			return None
-		elif servercheck.get_account_age(serverdata.clients[acid]["accountAge"]) < settings['minAgeToChatInHours']:
+		elif (servercheck.get_account_age(serverdata.clients[acid]["accountAge"]) < settings['minAgeToChatInHours']) and False:
 			_ba.screenmessage("New accounts not allowed to chat here", transient=True, clients=[client_id])
 			return None
 		else:
