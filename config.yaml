@@ -126,5 +126,5 @@ team_names:
 # Team colors (teams mode only).
 team_colors:
 - [0.8, 0.62, 0.32]
-- [0.12, 1.0, 0.49]
+- [0.439,0.122,0.514]
 

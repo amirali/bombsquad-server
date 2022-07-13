@@ -76,7 +76,7 @@ class checkserver(object):
 			if ros['account_id'] not in self.players and ros['client_id'] !=-1:
 				d_str=ros['display_string']
 				d_str2=profanity.censor(d_str)
-				Logger.log(d_str+"||"+ros["account_id"]+"|| joined server","playerjoin")
+				# Logger.log(d_str+"||"+ros["account_id"]+"|| joined server","playerjoin")
 				if d_str2!=d_str:
 					_ba.screenmessage("Profanity in Id , change your ID and join back",color=(1,0,0),transient=True,clients=[ros['client_id']])
 					Logger.log(d_str+"||"+ros["account_id"]+"|| kicked by profanity check","sys")
