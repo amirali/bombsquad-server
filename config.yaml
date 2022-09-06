@@ -9,7 +9,7 @@ party_name: Miare
 
 # If true, your party will show up in the global public party list
 # Otherwise it will still be joinable via LAN or connecting by IP address.
-#party_is_public: true
+party_is_public: false
 
 # If true, all connecting clients will be authenticated through the master
 # server to screen for fake account info. Generally this should always
@@ -20,8 +20,7 @@ authenticate_clients: false
 # kick vote system and they are able to kick players without a vote. To get
 # your account id, enter 'getaccountid' in settings->advanced->enter-code.
 admins:
-- pb-yOuRAccOuNtIdHErE
-- pb-aNdMayBeAnotherHeRE
+- "pb-IF4wUxQJDA=="
 
 # Whether the default kick-voting system is enabled.
 enable_default_kick_voting: true
